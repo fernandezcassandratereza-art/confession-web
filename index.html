@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cute Confessions</title>
+    <!-- Google Fonts for fun, cute fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Baloo+2:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ffe4e1, #ffb6c1);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Form Container */
+        .form-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+
+        .form-container h1 {
+            text-align: center;
+            font-family: 'Baloo 2', cursive;
+            color: #ff69b4;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ffb6c1;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff69b4, #ffb6c1);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Link Output Box */
+        #link-output {
+            margin-top: 20px;
+            display: none;
+        }
+
+        #link-output p {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        #share-link {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 2px solid #ffb6c1;
+            border-radius: 10px;
+            font-size: 14px;
+            resize: none;
+            background: #fff;
+            box-sizing: border-box;
+        }
+
+        /* Confession Display */
+        .confession-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            z-index: 10;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .confession-container h1 {
+            font-family: 'Baloo 2', cursive;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .confession-message {
+            font-size: 1.5em;
+            max-width: 80%;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 5px solid white;
+        }
+
+        /* Floating Hearts Animation */
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            color: #ff69b4;
+            animation: float 5s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .form-container {
+                margin: 20px;
+                padding: 15px;
+            }
+            .confession-container h1 {
+                font-size: 2em;
+            }
+            .confession-message {
+                font-size: 1.2em;
+            }
+            #share-link {
+                height: 80px;
+                font-size: 12px;
+            }
+        }
+
+        /* Hide elements based on mode */
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <!-- Form Section -->
+    <div id="form-section" class="form-container">
+        <h1>Send a Cute Confession 💕</h1>
+        <form id="confession-form">
+            <div class="form-group">
+                <label for="recipient">Recipient Name:</label>
+                <input type="text" id="recipient" required>
+            </div>
+            <div class="form-group">
+                <label for="sender">Your Name:</label>
+                <input type="text" id="sender" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Confession Message:</label>
+                <textarea id="message" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="theme">Background Theme:</label>
+                <select id="theme">
+                    <option value="#ffe4e1">Soft Pink</option>
+                    <option value="#e0f7fa">Light Blue</option>
+                    <option value="#f3e5f5">Lavender</option>
+                    <option value="#fff3e0">Peach</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="avatar-url">Avatar Image URL (optional):</label>
+                <input type="url" id="avatar-url" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="form-group">
+                <label for="avatar-file">Or Upload Avatar Image (optional):</label>
+                <input type="file" id="avatar-file" accept="image/*">
+            </div>
+            <button type="submit">Generate Shareable Link</button>
+        </form>
+        <div id="link-output">
+            <p>Share this link:</p>
+            <textarea id="share-link" readonly></textarea>
+        </div>
+    </div>
+
+    <!-- Confession Display Section -->
+    <div id="confession-section" class="confession-container hidden">
+        <img id="confession-avatar" class="avatar" src="" alt="Avatar" style="display: none;">
+        <h1 id="confession-title"></h1>
+        <p id="confession-message"></p>
+        <p id="confession-sender"></p>
+    </div>
+
+    <!-- Canvas for Confetti (optional) -->
+    <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5;"></canvas>
+
+    <!-- JavaScript -->
+    <script>
+        // Function to get URL parameters
+        function getUrlParams() {
+            const params = {};
+            const url = new URL(window.location);
+            for (let [key, value] of url.searchParams) {
+                params[key] = decodeURIComponent(value);
+            }
+            return params;
+        }
+
+        // Function to convert file to base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Simple confetti function (minimal inline)
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: Math.random() * 5 + 5,
+                    color: ['#ff69b4', '#ffb6c1', '#ffe4e1'][Math.floor(Math.random() * 3)],
+                    size: Math.random() * 5 + 5
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.1;
+                    if (p.y > canvas.height) {
+                        p.y = 0;
+                        p.x = Math.random() * canvas.width;
+                    }
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+            setTimeout(() => ctx.clearRect(0, 0, canvas.width, canvas.height), 5000);
+        }
+
+        // Check if in confession mode
+        const params = getUrlParams();
+        if (params.recipient) {
+            // Hide form, show confession
+            document.getElementById('form-section').classList.add('hidden');
+            document.getElementById('confession-section').classList.remove('hidden');
+
+            // Set background
+            document.documentElement.style.setProperty('--bg-color', params.theme || '#ffe4e1');
+
+            // Set content
+            document.getElementById('confession-title').textContent = `Dear ${params.recipient},`;
+            document.getElementById('confession-message').textContent = params.message;
+            document.getElementById('confession-sender').textContent = `- ${params.sender}`;
+
+            // Set avatar if provided
+            if (params.avatar) {
+                document.getElementById('confession-avatar').src = params.avatar;
+                document.getElementById('confession-avatar').style.display = 'block';
+            }
+
+            // Add floating hearts
+            for (let i = 0; i < 10; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '💖';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(heart);
+            }
+
+            // Launch confetti
+            launchConfetti();
+        } else {
+            // Form mode
+            document.getElementById('link-output').style.display = 'none';
+
+            document.getElementById('confession-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const recipient = document.getElementById('recipient').value;
+                const sender = document.getElementById('sender').value;
+                const message = document.getElementById('message').value;
+                const theme = document.getElementById('theme').value;
+                const avatarUrl = document.getElementById('avatar-url').value;
+                const avatarFile = document.getElementById('avatar-file').files[0];
+
+                let avatar = avatarUrl;
+                if (avatarFile) {
+                    avatar = await fileToBase64(avatarFile);
+                }
+
+                // Build query string
+                const query = new URLSearchParams({
+                    recipient,
+                    sender,
+                    message,
+                    theme,
+                    avatar
+                }).toString();
+
+                const link = `${window.location.origin}${window.location.pathname}?${query}`;
+
+                // Show link in box
+                document.getElementById('share-link').value = link;
+                document.getElementById('link-output').style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>
